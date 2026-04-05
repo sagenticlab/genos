@@ -1,7 +1,7 @@
 {
   "name": "genos",
   "version": "0.1.0",
-  "description": "",
+  "description": "CLI-based AI orchestration runtime",
   "main": "index.js",
   "scripts": {
     "dev": "node --loader ts-node/esm index.ts",
@@ -26,5 +26,8 @@
   },
   "bin": {
     "genos": "./dist/src/cli/index.js"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

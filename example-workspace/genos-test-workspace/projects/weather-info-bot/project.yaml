@@ -1,0 +1,94 @@
+id: weather-info-bot
+name: weather-info-bot
+description: Weather info bot
+resources:
+  models:
+    - my-mistral
+    - my-phi3
+    - my-tinyllama
+    - help-search
+    - my-mxbai-embed-large
+  embeddings: []
+  tools:
+    - weather-data
+    - geocode-city
+entryNode: start
+graph:
+  nodes:
+    start:
+      type: input
+      mode: cli
+      output: user_input
+    extract_city:
+      type: llm
+      systemContext: >
+        Answer in a single word. You only extracts the city name from user
+        prompt. Only provide the city name as output without any additional
+        text, explanations or formatting. If there are multiple cities
+        mentioned, choose the most relevant one based on the user prompt. return
+        only the city name without any additional text or formatting.
+      model: my-phi3
+      input:
+        - user_input
+      output: city
+    trim_output:
+      type: function
+      runtime: typescript
+      functionName: trimOutput
+      input:
+        - city
+      output: city
+    geocode:
+      type: tool
+      tool: geocode-city
+      input:
+        - city
+      args:
+        - city
+      output: location
+    format_geo_result:
+      type: function
+      runtime: typescript
+      functionName: formatGeoResult
+      input:
+        - location
+      output: location
+    weather:
+      type: tool
+      tool: weather-data
+      input:
+        - user_input
+      args:
+        - location
+      output: weather_info
+    summarize:
+      type: llm
+      systemContext: >
+        You are a helpful assistant that provides concise weather summaries
+        based on the provided weather data.
+      model: my-phi3
+      context: weather_info
+      input:
+        - user_input
+      output: summary
+    output:
+      type: output
+      input: summary
+      mode: cli
+  edges:
+    - from: start
+      to: extract_city
+    - from: extract_city
+      to: trim_output
+    - from: trim_output
+      to: geocode
+    - from: geocode
+      to: format_geo_result
+    - from: format_geo_result
+      to: weather
+    - from: weather
+      to: summarize
+    - from: summarize
+      to: output
+    - from: output
+      to: __end__

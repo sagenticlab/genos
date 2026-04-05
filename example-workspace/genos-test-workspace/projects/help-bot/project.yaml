@@ -1,0 +1,62 @@
+id: help-bot
+name: help-bot
+description: Help Bot
+resources:
+  models:
+    - my-mistral
+    - my-phi3
+    - my-tinyllama
+    - help-search
+    - my-mxbai-embed-large
+  embeddings:
+    - help-docs
+entryNode: start
+graph:
+  nodes:
+    start:
+      type: input
+      mode: cli
+      output: user_input
+    check_exit:
+      type: function
+      runtime: typescript
+      functionName: checkExit
+      input:
+        - user_input
+      output: should_exit
+    search:
+      type: rag
+      model: help-search
+      embedding: help-docs
+      input: user_input
+      output: context
+    answer:
+      type: llm
+      model: my-tinyllama
+      context: context
+      input:
+        - user_input
+      output: summary
+    output:
+      type: output
+      mode: cli
+      input: summary
+  edges:
+    - from: start
+      to: check_exit
+    - from: check_exit
+      to: search
+      condition:
+        input: should_exit
+        key: continue
+    - from: check_exit
+      to: __end__
+      condition:
+        input: should_exit
+        key: exit
+    - from: search
+      to: answer
+    - from: answer
+      to: output
+    - from: output
+      to: start

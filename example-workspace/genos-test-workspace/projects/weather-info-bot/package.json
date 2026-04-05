@@ -1,0 +1,5 @@
+{
+  "name": "weather-info-bot",
+  "type": "module",
+  "private": true
+}

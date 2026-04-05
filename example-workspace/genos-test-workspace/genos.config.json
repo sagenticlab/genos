@@ -1,0 +1,65 @@
+{
+    "version": "0.0.0",
+    "languageModels": {
+        "my-mistral": {
+            "type": "local",
+            "provider": "ollama",
+            "model": "mistral",
+            "endpoint": "http://localhost:11434/api/generate"
+        },
+        "my-phi3": {
+            "type": "local",
+            "provider": "ollama",
+            "model": "phi3",
+            "endpoint": "http://localhost:11434/api/generate"
+        },
+        "my-tinyllama": {
+            "type": "local",
+            "provider": "ollama",
+            "model": "tinyllama",
+            "endpoint": "http://localhost:11434/api/generate"
+        }
+    },
+    "embeddings": {
+        "help-search": {
+            "type": "local",
+            "provider": "ollama",
+            "model": "mxbai-embed-large",
+            "endpoint": "http://localhost:11434/api/embeddings"
+        },
+        "my-mxbai-embed-large": {
+            "type": "local",
+            "provider": "ollama",
+            "model": "mxbai-embed-large",
+            "endpoint": "http://localhost:11434/api/embeddings"
+        }
+    },
+    "tools": {
+        "file-reader": {
+            "type": "builtin",
+            "function": "fileReader",
+            "params": {
+                "fileName": "{{file_path}}"
+            }
+        },
+        "weather-data":{
+            "type": "http",
+            "url": "https://api.open-meteo.com/v1/forecast",
+            "method": "GET",
+            "params": {
+                "latitude": "{{location.latitude}}",
+                "longitude": "{{location.longitude}}",
+                "current_weather": true
+            }
+        },
+        "geocode-city":{
+            "type": "http",
+            "url": "https://geocoding-api.open-meteo.com/v1/search",
+            "method": "GET",
+            "params": {
+                "name": "{{city}}",
+                "count": 1
+            }
+        }
+    }
+}

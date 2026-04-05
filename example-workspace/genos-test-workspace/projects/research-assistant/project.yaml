@@ -1,0 +1,87 @@
+id: research-assistant
+name: research-assistant
+description: Research Assistant
+resources:
+  models:
+    - my-mistral
+    - my-phi3
+    - my-tinyllama
+    - help-search
+    - my-mxbai-embed-large
+  embeddings: []
+  tools:
+    - file-reader
+entryNode: start
+graph:
+  nodes:
+    start:
+      type: input
+      mode: cli
+      output: user_input
+    extract_file_info:
+      type: llm
+      systemContext: |
+        You are a structured data extractor.
+        
+        Return ONLY valid JSON string.
+        Do not explain.
+        Do not add text.
+        Do not add markdown.
+
+        Schema:
+        {
+          "collection": string,
+          "file": string
+        }
+
+        Examples:
+          Input: Analyze doc1 in research-docs
+          Output: {"collection":"research-docs","file":"doc1.txt"}
+
+        Now Process the following user prompt and extract the collection name and file name according to the above schema and instructions.
+      model: my-phi3
+      input:
+        - user_input
+      output: file_info
+    extract_file_path:
+      type: function
+      runtime: typescript
+      functionName: extractFilePath
+      input:
+        - file_info
+      output: file_path
+    read_file:
+      type: tool
+      tool: file-reader
+      input:
+        - file_path
+      args:
+        - file_path
+      output: file_content
+    summarize:
+      type: llm
+      systemContext: |
+        You are a helpful assistant that summarizes the content of the provided file.
+        Provide a concise summary that captures the main points and key information from the file content.
+      model: my-phi3
+      context: file_content
+      input:
+        - user_input
+      output: summary
+    output:
+      type: output
+      input: summary
+      mode: cli
+  edges:
+    - from: start
+      to: extract_file_info
+    - from: extract_file_info
+      to: extract_file_path
+    - from: extract_file_path
+      to: read_file
+    - from: read_file
+      to: summarize
+    - from: summarize
+      to: output
+    - from: output
+      to: __end__

@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
+import { DoctorCheckResult } from "../doctor";
 
-export async function checkEmbeddings(workspace: string) {
+export async function checkEmbeddings(workspace: string): Promise<DoctorCheckResult> {
   const messages: string[] = [];
   let ok = true;
 

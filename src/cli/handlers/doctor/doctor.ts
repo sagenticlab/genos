@@ -4,6 +4,14 @@ import { checkEmbeddingModels } from "./checks/checkEmbeddingModels";
 import { checkEmbeddings } from "./checks/checkEmbeddings";
 import { checkProjects } from "./checks/checkProjects";
 import { findWorkspaceRoot } from "../../../core/utils/findWorkspaceRoot";
+import { checkOllama } from "./checks/checkOllama";
+
+export interface DoctorCheckResult {
+  name: string;
+  ok: boolean;
+  messages: string[];
+  fix?: string;
+}
 
 export async function doctor() {
 
@@ -14,8 +22,9 @@ export async function doctor() {
   }
 
   console.log("Running GenOS Doctor...\n");
-  
-  const checks = [
+  const checkOllamaResult: DoctorCheckResult[] = await checkOllama();
+  const checks: DoctorCheckResult[] = [
+    ... checkOllamaResult,
     await checkWorkspace(workspace),
     await checkLanguageModels(workspace),
     await checkEmbeddingModels(workspace),
@@ -33,6 +42,10 @@ export async function doctor() {
 
     for (const msg of check.messages) {
       console.log(" ", msg);
+    }
+
+    if (check.fix) {
+      console.log(" Fix:", check.fix);
     }
 
     if (!check.ok) systemOk = false;

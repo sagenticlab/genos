@@ -1,8 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { loadSystemConfig } from "../../../../core/utils/loadSystemConfig";
+import { DoctorCheckResult } from "../doctor";
 
-export async function checkWorkspace(workspace: string) {
+export async function checkWorkspace(workspace: string): Promise<DoctorCheckResult> {
   const messages: string[] = [];
   let ok = true;
 

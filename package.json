@@ -1,5 +1,5 @@
 {
-  "name": "genos",
+  "name": "@sagentic/genos",
   "version": "0.1.0",
   "description": "CLI-based AI orchestration runtime",
   "main": "index.js",
@@ -10,8 +10,8 @@
     "launch": "tsc && node dist/index.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Sagentic Team",
+  "license": "MIT",
   "dependencies": {
     "@inquirer/prompts": "^8.3.0",
     "chromadb": "^3.1.6",
@@ -25,7 +25,7 @@
     "typescript": "^5.9.3"
   },
   "bin": {
-    "genos": "./dist/src/cli/index.js"
+    "genos": "dist/src/cli/index.js"
   },
   "files": [
     "dist"

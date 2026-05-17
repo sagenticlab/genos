@@ -1,4 +1,5 @@
 import { loadSystemConfig } from "../../../../core/utils/loadSystemConfig";
+import { DoctorCheckResult } from "../doctor";
 
 async function fetchWithTimeout(input: RequestInfo, init: RequestInit = {}, timeoutMs = 10000) {
   const controller = new AbortController();
@@ -12,7 +13,7 @@ async function fetchWithTimeout(input: RequestInfo, init: RequestInit = {}, time
   }
 }
 
-export async function checkLanguageModels(workspace: string) {
+export async function checkLanguageModels(workspace: string): Promise<DoctorCheckResult> {
   const messages: string[] = [];
   let ok = true;
 

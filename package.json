@@ -31,11 +31,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/savinuvijay/genos.git"
+    "url": "https://github.com/sagenticlab/genos.git"
   },
-  "homepage": "https://github.com/savinuvijay/genos",
+  "homepage": "https://github.com/sagenticlab/genos",
   "bugs": {
-    "url": "https://github.com/savinuvijay/genos/issues"
+    "url": "https://github.com/sagenticlab/genos/issues"
   },
   "keywords": [
     "ai",

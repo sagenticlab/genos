@@ -7,6 +7,8 @@ import { documentCommand } from "./commands/documents";
 import { projectCommand } from "./commands/project";
 import { listCommand } from "./commands/list";
 import { doctorCommand } from "./commands/doctor";
+import { setupCommand } from "./commands/setup";
+import { workspaceCommand } from "./commands/workspace";
 
 
 const program = new Command();
@@ -18,6 +20,8 @@ program
 
 // Register commands
 program.addCommand(initCommand);
+program.addCommand(workspaceCommand);
+program.addCommand(setupCommand);
 program.addCommand(buildCommand);
 program.addCommand(embeddingCommand);
 program.addCommand(documentCommand);

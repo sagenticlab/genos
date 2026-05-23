@@ -13,6 +13,7 @@ export const embeddingCommand = new Command("embedding")
 embeddingCommand
   .command("create <name>")
   .description("Create Embedding")
+  .option("-o, --open", "Open the created embedding file in the editor")
   .action(createEmbedding);
 
 embeddingCommand
@@ -36,7 +37,7 @@ embeddingCommand
   .action(inspectEmbedding);
 
 embeddingCommand
-  .command("build <name> <model>")
+  .command("build <name> [model]")
   .description("Build Embedding")
   .action(buildEmbedding);
 

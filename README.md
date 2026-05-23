@@ -356,6 +356,27 @@ Tool Node (Weather)
 Response
 ```
 
+# Example Workspace
+
+The repository includes complete reference workspaces demonstrating different GenOS capabilities.
+
+It is available as `example-workspace` in the project repository.
+
+The workspace contains:
+- projects
+- embeddings
+- documents
+- functions
+- configuration
+- generated workflows
+
+## Purpose
+
+Use this example workspace to:
+
+- verify Genos workspace loading and configuration behavior
+- experiment with local/open-source model settings
+- test document/embedding/project workflows
 
 ## Example Projects
 
@@ -366,11 +387,19 @@ Basic conversational workflow with embeddings.
 * Ask questions from documents
 * Uses embeddings + LLM
 
+```text
+input → rag → llm → output
+```
+
 ### 2. Weather Info Bot (Tool chaining)
 
 Tool orchestration using geocoding + weather APIs.
 
 * Extract city → geocode → fetch weather
+
+```text
+input → geocode → weather → llm → output
+```
 
 ### 3. Research Assistant (Local automation)
 
@@ -378,8 +407,29 @@ Document retrieval and local file-based workflows.
 
 * Read files → summarize → extract insights
 
+```text
+input → document search → llm → output
+```
 
-## Debugging
+## How to use
+
+Clone the repository and open the workspace.
+
+This workspace can be explored, modified, and executed directly using GenOS commands.
+
+```bash
+cd example-workspace
+genos setup -d
+genos doctor
+genos run help-bot
+```
+
+## Notes
+
+- The workspace is intentionally minimal and designed for experimentation.
+- It includes sample documents, embeddings, and project scaffolding for quick validation.
+
+# Debugging
 
 If you need to troubleshoot your GenOS workspace, use the built-in health check and setup commands.
 
@@ -388,11 +438,11 @@ If you need to troubleshoot your GenOS workspace, use the built-in health check 
 - `genos setup -d` (or `genos setup`)
   - Validate your runtime and restore missing dependencies. Use `-d, --default` to run setup non-interactively with the recommended models (`phi3`, `mxbai-embed-large`).
 
-## CLI Commands
+# CLI Commands
 
 This section documents every available `genos` command and subcommand.
 
-### Top-level commands
+## Top-level commands
 - `genos init`
   - Initialize a GenOS workspace.
   - Example:
@@ -430,7 +480,7 @@ This section documents every available `genos` command and subcommand.
     genos doctor
     ```
 
-### Workspace commands
+## Workspace commands
 - `genos workspace create <name>`
   - Create a new workspace.
   - Options: `-g, --global` to create workspace in the user home directory (default: current directory).
@@ -445,7 +495,7 @@ This section documents every available `genos` command and subcommand.
     genos workspace create my-workspace --global
     ```
 
-### Project commands
+## Project commands
 - `genos project create <name>`
   - Create a new project.
   - Example:
@@ -504,7 +554,7 @@ This section documents every available `genos` command and subcommand.
     genos project open help-bot
     ```
 
-### Embedding commands
+## Embedding commands
 - `genos embedding create <name>`
   - Create a new embedding collection.
   - Options: `-o, --open` to open the created file in the editor.
@@ -573,7 +623,7 @@ This section documents every available `genos` command and subcommand.
     genos embedding delete help-docs
     ```
 
-### Document commands
+## Document commands
 - `genos document create <name>`
   - Create a new document collection.
   - Example:
@@ -622,7 +672,7 @@ This section documents every available `genos` command and subcommand.
     genos document delete research-docs
     ```
 
-### List commands
+## List commands
 - `genos list projects`
   - List all projects.
   - Example:
@@ -655,12 +705,12 @@ This section documents every available `genos` command and subcommand.
     genos list tools
     ```
 
-## Status
+# Status
 
 GenOS is in **v0.1.x** — early but functional.
 
 
-## Roadmap
+# Roadmap
 
 - [x] Graph-based runtime
 - [x] Tool system
@@ -671,7 +721,7 @@ GenOS is in **v0.1.x** — early but functional.
 - [ ] Visual graph debugger
 - [ ] Interactive UI
 
-## Philosophy
+# Philosophy
 
 GenOS treats AI as a **system**, not a single model call.
 
@@ -682,7 +732,7 @@ AI systems should be composable, inspectable, and structured.
 Instead of hiding orchestration inside prompts and loops, GenOS makes execution explicit through graphs and reusable runtime primitives.
 
 
-## Contributing
+# Contributing
 
 Contributions, ideas, and discussions are welcome.
 

@@ -9,7 +9,6 @@
     "start": "node dist/index.js",
     "launch": "tsc && node dist/index.js"
   },
-  "keywords": [],
   "author": "Sagentic Team",
   "license": "MIT",
   "dependencies": {
@@ -29,5 +28,25 @@
   },
   "files": [
     "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/savinuvijay/genos.git"
+  },
+  "homepage": "https://github.com/savinuvijay/genos",
+  "bugs": {
+    "url": "https://github.com/savinuvijay/genos/issues"
+  },
+  "keywords": [
+    "ai",
+    "llm",
+    "workflow",
+    "graph",
+    "orchestration",
+    "rag",
+    "ollama",
+    "typescript",
+    "agent",
+    "local-ai"
   ]
 }

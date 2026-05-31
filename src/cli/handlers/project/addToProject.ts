@@ -8,6 +8,7 @@ interface AddOptions {
   function?: string;
   embedding?: string;
   tool?: string;
+  knowledge?: string;
 }
 
 export async function addToProject(projectName: string, options: AddOptions) {
@@ -98,6 +99,38 @@ export async function ${functionName}(...args) {
       console.log(`✅ Embedding '${embeddingName}' added to project '${projectName}'`);
     } catch (error) {
       console.error(`Failed to access embedding directory for '${embeddingName}': ${error}`);
+      return
+    }
+  }
+
+    else if(options.knowledge) {
+    const knowledgeName = options.knowledge;
+    console.log("Knowledge name:", knowledgeName);
+    try {
+      const knowledgeDir = path.join(workspace, "knowledge", knowledgeName);
+      const files = await fs.readdir(knowledgeDir);
+      console.log("Files in knowledge directory:", files);
+      
+      // Load and update the project yaml file
+      const projectConfigPath = path.join(projectDir, "project.yaml");
+      const projectConfigContent = await fs.readFile(projectConfigPath, "utf-8");
+      const projectConfig = yaml.load(projectConfigContent) as any;
+      
+      if (!projectConfig.resources) {
+        projectConfig.resources = {};
+      }
+      if (!projectConfig.resources.knowledge) {
+        projectConfig.resources.knowledge = [];
+      }
+      
+      if (!projectConfig.resources.knowledge.includes(knowledgeName)) {
+        projectConfig.resources.knowledge.push(knowledgeName);
+      }
+      
+      await fs.writeFile(projectConfigPath, yaml.dump(projectConfig, { indent: 2 }));
+      console.log(`✅ Knowledge '${knowledgeName}' added to project '${projectName}'`);
+    } catch (error) {
+      console.error(`Failed to access knowledge directory for '${knowledgeName}': ${error}`);
       return
     }
   }

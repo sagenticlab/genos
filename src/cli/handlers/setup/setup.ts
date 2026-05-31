@@ -136,13 +136,13 @@ export async function setup(options: { default?: boolean }) {
     }
 
     for (const model of selectedEmbeddingModels) {
-        config.embeddings = config.embeddings || {};
-        if (config.embeddings[model]) {
+        config.embeddingModels = config.embeddingModels || {};
+        if (config.embeddingModels[model]) {
             console.log(`Model ${model} already exists in config, skipping...`);
             continue;
         }
         console.log(`Adding embedding model: ${model}`);
-        config.embeddings[model] = {
+        config.embeddingModels[model] = {
             type: "local",
             provider: "ollama",
             model,

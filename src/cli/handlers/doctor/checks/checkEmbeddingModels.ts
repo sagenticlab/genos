@@ -27,7 +27,7 @@ export async function checkEmbeddingModels(workspace: string): Promise<DoctorChe
     };
   }
 
-  const embeddingModels = config.embeddings || {};
+  const embeddingModels = config.embeddingModels || {};
 
   // Run all model checks in parallel to avoid waiting sequentially for each timeout.
   await Promise.allSettled(

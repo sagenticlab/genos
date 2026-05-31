@@ -1,16 +1,30 @@
 export interface ToolDefinition {
-  name: string;
-  type: "http";
-  url: string;
+  type: "http" | "builtin";
+  url?: string;
   method?: "GET" | "POST";
   params?: Record<string, any>;
+  function?: string;
 }
+
+export const BUILTIN_TOOLS: Record<string, ToolDefinition> = {
+  "file-reader": {
+    type: "builtin",
+    function: "fileReader",
+    params: {
+      fileName: "{{file_path}}"
+    }
+  }
+};
 
 export class ToolRegistry {
   private tools = new Map<string, ToolDefinition>();
 
-  register(tool: ToolDefinition) {
-    this.tools.set(tool.name, tool);
+  constructor() {
+    Object.entries(BUILTIN_TOOLS).forEach(([name, tool]) => this.register(name, tool));
+  }
+
+  register(name: string, tool: ToolDefinition) {
+    this.tools.set(name, tool);
   }
 
   get(name: string): ToolDefinition {
@@ -20,6 +34,6 @@ export class ToolRegistry {
   }
 
   list() {
-    return Array.from(this.tools.values());
+    return Array.from(this.tools.keys());
   }
 }

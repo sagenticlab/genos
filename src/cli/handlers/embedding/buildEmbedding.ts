@@ -22,7 +22,7 @@ export async function buildEmbedding(name: string, model: string) {
 
   // if model name is not provided, ask user to select from configured embedding models
   if (!model) {
-    const embeddingModelChoices = Object.keys(config.embeddings || {});
+    const embeddingModelChoices = Object.keys(config.embeddingModels || {});
     console.log("Available embedding models:", embeddingModelChoices);
     const prompts = await import("@inquirer/prompts");
     const { select } = prompts;
@@ -36,7 +36,7 @@ export async function buildEmbedding(name: string, model: string) {
     });
   }
 
-  const modelConfig = config.embeddings ? config.embeddings[model] : undefined;
+  const modelConfig = config.embeddingModels ? config.embeddingModels[model] : undefined;
   if (!modelConfig) {
     console.error(`Embedding model '${model}' not found in config.`);
     process.exit(1);

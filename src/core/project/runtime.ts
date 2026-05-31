@@ -9,6 +9,7 @@ import { llmNodeHandler } from "./nodeHandlers/llm";
 import { outputNodeHandler } from "./nodeHandlers/output";
 import { ragNodeHandler } from "./nodeHandlers/rag";
 import { toolNodeHandler } from "./nodeHandlers/tool";
+import { BUILTIN_TOOLS } from "../tools/toolRegistry";
 
 export const runGraph = async (
   graph: Graph,
@@ -16,11 +17,22 @@ export const runGraph = async (
   initialState: ExecutionState,
   resources: Resources
 ) => {
+
+  // Injecting Builtin tools.
+  initialState.config.tools = { ...BUILTIN_TOOLS, ...initialState.config.tools };
+
   const state: ExecutionState = {
     ...initialState,
     currentNode: entryNode,
     completed: false
   };
+
+  const models = resources?.models || [];
+  const knowledge = resources?.knowledge || [];
+  const tools = resources?.tools || [];
+  const functions = resources?.functions || [];
+
+  tools.push(...Object.keys(BUILTIN_TOOLS));
 
   while (!state.completed) {
     if (state.currentNode === "__end__") {
@@ -40,19 +52,19 @@ export const runGraph = async (
         await inputNodeHandler(node, state);
         break;
       case "llm":
-        await llmNodeHandler(node, state, resources!.models ?? []);
+        await llmNodeHandler(node, state, models);
         break;
       case "rag":
-        await ragNodeHandler(node, state, resources!.models ?? [], resources!.embeddings ?? []);
+        await ragNodeHandler(node, state, models, knowledge);
         break;
       case "output":
         await outputNodeHandler(node, state);
         break;
       case "function":
-        await functionNodeHandler(node, state);
+        await functionNodeHandler(node, state, functions);
         break;
       case "tool":
-        await toolNodeHandler(node, state, resources!.tools ?? []);
+        await toolNodeHandler(node, state, tools);
         break;
       case "control":
         nextNode = await controlNodeHandler(node, state);

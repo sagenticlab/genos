@@ -16,8 +16,9 @@ const initWorkspace = () => {
   const genosDir = path.join(workspace, ".genos");
   const configPath = path.join(workspace, "genos.config.json");
   const vectorsDir = path.join(genosDir, "vectors");
-  const embeddingsPath = path.join(workspace, "embeddings");
-  const documentsPath = path.join(workspace, "documents");
+  const knowledgePath = path.join(workspace, "knowledge");
+  const functionsPath = path.join(workspace, "functions");
+  // const documentsPath = path.join(workspace, "documents");
   const projectsPath = path.join(workspace, "projects");
 
   if (fs.existsSync(configPath)) {
@@ -30,7 +31,7 @@ const initWorkspace = () => {
   const defaultConfig: GenosConfig = {
     version: "1.0",
     languageModels: {},
-    embeddings: {},
+    embeddingModels: {},
     tools: {}
   };
 
@@ -38,15 +39,17 @@ const initWorkspace = () => {
 
   fs.writeFileSync(configPath, JSON.stringify(defaultConfig, null, 2));
 
-  fs.mkdirSync(embeddingsPath, { recursive: true });
-  fs.mkdirSync(documentsPath, { recursive: true });
+  fs.mkdirSync(knowledgePath, { recursive: true });
+  // fs.mkdirSync(documentsPath, { recursive: true });
   fs.mkdirSync(projectsPath, { recursive: true });
   fs.mkdirSync(vectorsDir, { recursive: true });
+  fs.mkdirSync(functionsPath, { recursive: true });
 
   console.log("✓ Created genos.config.json");
-  console.log("✓ Created embeddings/");
+  console.log("✓ Created knowledge/");
   console.log("✓ Created documents/");
   console.log("✓ Created projects/");
+  console.log("✓ Created functions/");
   console.log("✓ Created .genos/vectors");
 
   console.log("\nWorkspace ready.");

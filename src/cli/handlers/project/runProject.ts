@@ -36,18 +36,6 @@ export async function runProject(projectName: string, options: RunOptions) {
       if(projectConfig){
         validateGraph(projectConfig.graph);
         
-        // Validate function files exist
-        for (const [nodeId, node] of Object.entries(projectConfig.graph.nodes)) {
-          if (node.type === 'function') {
-            const functionName = node.functionName;
-            const functionPath = path.join(workspaceRoot, 'projects', projectName, 'functions', `${functionName}.js`);
-            try {
-              await fs.access(functionPath);
-            } catch {
-              throw new Error(`Function file '${functionName}.js' for node '${nodeId}' does not exist at ${functionPath}`);
-            }
-          }
-        }
         
         const initialState: ExecutionState = {
           workspaceRoot: workspaceRoot,

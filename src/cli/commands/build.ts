@@ -29,7 +29,7 @@ export const buildWorkspace = () => {
 
   console.log("✓ Config validated");
 
-  const models = [...(Object.keys(config.languageModels || {})), ...(Object.keys(config.embeddings || {}))];
+  const models = [...(Object.keys(config.languageModels || {})), ...(Object.keys(config.embeddingModels || {}))];
   const tools = Object.keys(config.tools || {});
 
   console.log(`✓ ${models.length} models loaded`);

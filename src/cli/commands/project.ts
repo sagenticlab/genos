@@ -28,6 +28,7 @@ projectCommand
 projectCommand
   .command("add <project>")
   .option("-f, --function <name>", "Add function to project")
+  .option("-k, --knowledge <name>", "Add knowledge base to project")
   .option("-e, --embedding <name>", "Add embedding to project")
   .option("-t, --tool <name>", "Add tool to project")
   .description("Add resources to a project")

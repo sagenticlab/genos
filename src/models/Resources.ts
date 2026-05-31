@@ -1,7 +1,8 @@
 export interface Resources {
     models?: string[];      // allowed llm IDs
-    embeddings?: string[];  // attached RAGs
+    knowledge?: string[];  // attached RAGs
     tools?: string[];       // allowed tools
+    functions?: string[];   // allowed functions
 }
 
 export interface Model {

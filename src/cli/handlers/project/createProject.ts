@@ -4,6 +4,7 @@ import path from "path";
 import yaml from "js-yaml";
 import { loadSystemConfig } from "../../../core/utils/loadSystemConfig";
 import { findWorkspaceRoot } from "../../../core/utils/findWorkspaceRoot";
+import { Project } from "../../../models/Project";
 
 export async function createProject(projectName: string) {
   const prompts = await import("@inquirer/prompts");
@@ -39,7 +40,7 @@ export async function createProject(projectName: string) {
 
   // ---- Prepare resource choices ----
   const llmModelChoices = Object.keys(config.languageModels || {});
-  const embeddingModelChoices = Object.keys(config.embeddings || {});
+  const embeddingModelChoices = Object.keys(config.embeddingModels || {});
 
   const embeddingVectors = await fs.readdir(path.join(workspaceRoot, ".genos", "vectors"));
   console.log("Found embedding vectors:", embeddingVectors); // remove the file extension for better display
@@ -47,18 +48,22 @@ export async function createProject(projectName: string) {
   
 
   // ---- Ask selections ----
-  const selectedLLMModels = llmModelChoices.length > 0 ? await checkbox({
+  const selectedLLMModels: string[] = llmModelChoices.length > 0 ? await checkbox({
     message: "Select LLM models:",
-    choices: llmModelChoices
+    choices: llmModelChoices.map((m, i) => ({
+      name: m,
+      value: m,
+      default: i === 0
+    })),
   }) : [];
 
-  const selectedEmbeddingModels = embeddingModelChoices.length > 0 ? await checkbox({
+  const selectedEmbeddingModels: string[] = embeddingModelChoices.length > 0 ? await checkbox({
     message: "Select embedding models:",
     choices: embeddingModelChoices
   }) : [];
 
-  const selectedEmbeddingVectors = embeddingVectorChoices.length > 0 ? await checkbox({
-    message: "Select embedding vectors:",
+  const selectedEmbeddingVectors: string[] = embeddingVectorChoices.length > 0 ? await checkbox({
+    message: "Select Knowledge:",
     choices: embeddingVectorChoices
   }) : [];
 
@@ -89,13 +94,13 @@ export async function createProject(projectName: string) {
     )
   );
 
-  const projectJson = {
+  const projectJson: Project = {
     id: projectName,
     name: projectName,
     description,
     resources: {
         models: [...selectedLLMModels, ...selectedEmbeddingModels],
-        embeddings: [...selectedEmbeddingVectors],
+        knowledge: [...selectedEmbeddingVectors],
     },
     entryNode: "start",
     graph: { nodes: {}, edges: [] }

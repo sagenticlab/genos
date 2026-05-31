@@ -1,4 +1,4 @@
-// cli/commands/buildEmbedding.ts
+// cli/commands/buildKnowledge.ts
 import fs from "fs/promises";
 import path from "path";
 import { findWorkspaceRoot } from "../../../core/utils/findWorkspaceRoot";
@@ -6,7 +6,7 @@ import { loadSystemConfig } from "../../../core/utils/loadSystemConfig";
 import { RetrivalAugmentedGeneration } from "../../../core/rag/storage";
 import { Chunk } from "../../../models/Chunk";
 
-export async function buildEmbedding(name: string, model: string) {
+export async function buildKnowledge(name: string, model: string) {
 
   const workspaceRoot = findWorkspaceRoot();
   if (!workspaceRoot) {
@@ -18,6 +18,26 @@ export async function buildEmbedding(name: string, model: string) {
   if (!config) {
     console.error("No GenOS workspace found.");
     return;
+  }
+
+  // if model name is not provided, ask user to select from configured embedding models
+  if (!model) {
+    const embeddingModelChoices = Object.keys(config.embeddingModels || {});
+    if (!embeddingModelChoices.length) {
+      console.error("No embedding models configured. Please add one to genos.config.json.");
+      process.exit(1);
+    }
+    console.log("Available embedding models:", embeddingModelChoices);
+    const prompts = await import("@inquirer/prompts");
+    const { select } = prompts;
+
+    model = await select({
+      message: "Select an embedding model",
+      choices: embeddingModelChoices.map((m) => ({
+        name: m,
+        value: m
+      }))
+    });
   }
 
   const modelConfig = config.embeddingModels ? config.embeddingModels[model] : undefined;
@@ -34,7 +54,7 @@ export async function buildEmbedding(name: string, model: string) {
     process.exit(1);
   }
 
-  const dir = path.join(workspace, "embeddings", name);
+  const dir = path.join(workspace, "knowledge", name);
   const files = await fs.readdir(dir);
 
   const texts: string[] = [];
@@ -73,5 +93,5 @@ export async function buildEmbedding(name: string, model: string) {
     JSON.stringify({ embedding: name, model, chunks: chunks }, null, 2)
   );
 
-  console.log(`✅ Embedding '${name}' built with model '${model}'`);
+  console.log(`✅ Knowledge Base '${name}' built with model '${model}'`);
 }

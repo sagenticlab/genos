@@ -13,7 +13,7 @@ export const llmNodeHandler = async (node: GraphNode, state: ExecutionState, mod
 
     const llmModel = models.find(model => model === llmNode.model);
     if (!llmModel) {
-      throw new Error(`LLM model not found: ${llmNode.model}`);
+      throw new Error(`LLM model not found in resources: ${llmNode.model}`);
     }
 
     const llmResource = (state.config.languageModels as Record<string, any>)[llmModel] as Model;

@@ -9,6 +9,8 @@ import { listCommand } from "./commands/list";
 import { doctorCommand } from "./commands/doctor";
 import { setupCommand } from "./commands/setup";
 import { workspaceCommand } from "./commands/workspace";
+import { functionCommand } from "./commands/functions";
+import { knowledgeCommand } from "./commands/knowledge";
 
 
 const program = new Command();
@@ -23,9 +25,11 @@ program.addCommand(initCommand);
 program.addCommand(workspaceCommand);
 program.addCommand(setupCommand);
 program.addCommand(buildCommand);
+program.addCommand(knowledgeCommand);
 program.addCommand(embeddingCommand);
 program.addCommand(documentCommand);
 program.addCommand(projectCommand);
+program.addCommand(functionCommand);
 program.addCommand(listCommand);
 program.addCommand(doctorCommand);
 

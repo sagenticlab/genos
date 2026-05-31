@@ -15,7 +15,7 @@ export const listModels = () => {
   }
 
   const languageModels = Object.keys(config.languageModels || {}) || [];
-  const embeddings = Object.keys(config.embeddings || {}) || [];
+  const embeddings = Object.keys(config.embeddingModels || {}) || [];
   if (languageModels.length === 0 && embeddings.length === 0) {
       console.log("No models found in config.");
       return;

@@ -10,7 +10,7 @@ export interface LLMNode {
 export interface RAGNode {
   type: "rag";
   model: string;
-  embedding: string; // reference to EmbeddingAsset
+  knowledge: string; // reference to EmbeddingAsset
   input: string; // state key
   output: string; // state key
 }
@@ -25,6 +25,7 @@ export interface ToolNode {
 
 export interface FunctionNode {
   type: "function";
+  builtin?: boolean;
   runtime: "python" | "typescript";
   functionName: string;
   input: string[];

@@ -1,14 +1,50 @@
 # GenOS
 
+> Build AI workflows as executable graphs.
+
 Composable graph-based AI orchestration runtime by __Sagentic__.
 
-Build local-first AI systems using workflows, tools, functions, embeddings, and agentic execution.
+GenOS is a local-first AI orchestration runtime that executes workflows as directed graphs.
 
-## Installation
+Inspired by operating system concepts, GenOS treats AI workflows as executable systems rather than prompt chains, providing a runtime kernel for managing state, knowledge, tools, functions, and model execution.
 
-```bash
-npm install -g @sagentic/genos
-```
+## Features
+
+- Graph-based workflow execution
+- Local-first AI with Ollama
+- RAG and knowledge management
+- Reusable project composition
+- Built-in and custom functions
+- Tool integration via MCP
+- Workspace-based development
+- Provider agnostic (Ollama, OpenAI, Anthropic, custom)
+
+## Architecture
+
+![GenOS Architecture](docs/images/GenOS_Architecture.png)
+
+*GenOS Runtime Architecture*
+
+## Architecture Overview
+
+GenOS is built around a runtime kernel that executes projects as directed graphs.
+
+A project consists of:
+
+- Inputs and Outputs
+- Graph definition
+- Resources (models, knowledge, functions, tools)
+- Entry node
+
+The runtime kernel manages:
+
+- Graph execution
+- State and context
+- Node dispatching
+- Validation
+- Resource resolution
+
+Projects can invoke other projects through Module Nodes, enabling workflow composition and reuse.
 
 # Getting Started
 
@@ -35,7 +71,7 @@ cd my-genos-workspace
 A workspace contains:
 
 - projects
-- embeddings
+- knowledgs
 - functions
 - runtime configuration
 - generated artifacts
@@ -44,7 +80,7 @@ You can create multiple independent GenOS workspaces anywhere on your system.
 
 ## 3. Setup Local AI Runtime
 
-GenOS currently uses __Ollama__ as the default local runtime for language models and embeddings.
+GenOS currently uses __Ollama__ as the default local runtime for language models and embedding models.
 
 Install Ollama:
 
@@ -68,9 +104,9 @@ The setup command will (interactive by default). Use `-d, --default` to run non-
 ```
 my-genos-workspace/
 ├─ genos.config.json
-├─ documents/
 ├─ projects/
-├─ embeddings/
+├─ knowledge/
+├─ functions/
 └─ .genos/
 ```
 
@@ -94,21 +130,23 @@ genos project create help-bot
 ```
 
 
-## 5. Create an Embedding
+## 5. Create a Knowledge Base
 
-Create an embedding knowledge base:
+Create a knowledge base:
 
 ```bash
-genos embedding create help-docs -o
+genos knowledge create help-docs -o
 ```
 
 This creates:
 
 ```text
-embeddings/help-docs/help-docs.txt
+knowledge/help-docs/help-docs.txt
 ```
 
 and opens the file.
+
+> Note: `genos embedding create` is deprecated. Use `genos knowledge create` instead.
 
 ## 6. Add Your Knowledge
 
@@ -123,12 +161,12 @@ It supports:
 - graph execution
 - tools
 - functions
-- embeddings
+- knowledge embeddings
 - local-first AI workflows
 ```
 
 
-## 7. Build Embeddings
+## 7. Build Knowledge
 
 Generate vector embeddings from your documents:
 
@@ -139,7 +177,9 @@ genos knowledge build help-docs
 The setup command will:
 
 - let you choose an embedding model from the available models.
-- creates the vector embeddings on the knowledge using the selected embedding model.
+- create the vector embeddings on the knowledge using the selected embedding model.
+
+> Note: `genos embedding build` is deprecated. Use `genos knowledge build` instead.
 
 ## 8. Attach knowledge to the project
 
@@ -238,7 +278,7 @@ Example:
 ```text
 > What is GenOS?
 
-GenOS is a graph-based AI orchestration runtime that supports composable AI workflows using graphs, tools, functions, embeddings, and local language models.
+GenOS is a graph-based AI orchestration runtime that supports composable AI workflows using graphs, tools, functions, knowledge embeddings, and local language models.
 ```
 
 __Note:__ Response time varies with your system resources and the chosen LLM because models run locally.
@@ -336,7 +376,7 @@ Execution state is shared across the graph.
 ### Tools
 External capabilities exposed to workflows.
 
-### Embeddings
+### Knowledge
 Local RAG support using chunked vector storage.
 
 ### Functions
@@ -364,7 +404,7 @@ It is available as `example-workspace` in the project repository.
 
 The workspace contains:
 - projects
-- embeddings
+- knowledge
 - documents
 - functions
 - configuration
@@ -382,10 +422,10 @@ Use this example workspace to:
 
 ### 1. Help Bot (RAG)
 
-Basic conversational workflow with embeddings.
+Basic conversational workflow with provided knowlegde.
 
 * Ask questions from documents
-* Uses embeddings + LLM
+* Uses knowledge + LLM
 
 ```text
 input → rag → llm → output
@@ -427,7 +467,7 @@ genos project run help-bot
 ## Notes
 
 - The workspace is intentionally minimal and designed for experimentation.
-- It includes sample documents, embeddings, and project scaffolding for quick validation.
+- It includes sample documents, knowledge, and project scaffolding for quick validation.
 
 # Debugging
 
@@ -616,12 +656,138 @@ This section documents every available `genos` command and subcommand.
     ```
 
 - `genos knowledge delete <name>`
-  - Delete an knowledge collection.
+  - Delete a knowledge collection.
   - Example:
 
     ```bash
-    genos knowledge deete help-docs
+    genos knowledge delete help-docs
+    ```
 
+## Deprecated embedding command aliases
+The `genos embedding ...` commands are deprecated. Use the equivalent `genos knowledge ...` commands instead.
+
+- `genos embedding create <name>`
+  - Create a new embedding collection (deprecated alias).
+  - Options: `-o, --open` to open the created embedding file in the editor.
+  - Example:
+
+    ```bash
+    genos embedding create help-docs
+    ```
+
+- `genos embedding add <name> <fileName>`
+  - Add a file to an embedding collection (deprecated alias).
+  - Example:
+
+    ```bash
+    genos embedding add help-docs docs/help.txt
+    ```
+
+- `genos embedding remove <name> <fileName>`
+  - Remove a file from an embedding collection (deprecated alias).
+  - Example:
+
+    ```bash
+    genos embedding remove help-docs docs/help.txt
+    ```
+
+- `genos embedding list <name>`
+  - List files in an embedding collection (deprecated alias).
+  - Example:
+
+    ```bash
+    genos embedding list help-docs
+    ```
+
+- `genos embedding inspect <name> <fileName>`
+  - Inspect a file inside an embedding collection (deprecated alias).
+  - Example:
+
+    ```bash
+    genos embedding inspect help-docs docs/help.txt
+    ```
+
+- `genos embedding build <name> [model]`
+  - Build an embedding collection using a model (deprecated alias).
+  - The model parameter is optional; if omitted, you will be prompted to select from configured embedding models.
+  - Example:
+
+    ```bash
+    genos embedding build help-docs mxbai-embed-large
+    ```
+
+- `genos embedding delete <name>`
+  - Delete an embedding collection (deprecated alias).
+  - Example:
+
+    ```bash
+    genos embedding delete help-docs
+    ```
+
+## Document commands
+- `genos document create <name>`
+  - Create a new document collection.
+  - Example:
+
+    ```bash
+    genos document create research-docs
+    ```
+
+- `genos document add <name> <fileName>`
+  - Add a file to a document collection.
+  - Example:
+
+    ```bash
+    genos document add research-docs docs/research.txt
+    ```
+
+- `genos document remove <name> <fileName>`
+  - Remove a file from a document collection.
+  - Example:
+
+    ```bash
+    genos document remove research-docs docs/research.txt
+    ```
+
+- `genos document list <name>`
+  - List files in a document collection.
+  - Example:
+
+    ```bash
+    genos document list research-docs
+    ```
+
+- `genos document inspect <name> <fileName>`
+  - Inspect a file inside a document collection.
+  - Example:
+
+    ```bash
+    genos document inspect research-docs docs/research.txt
+    ```
+
+- `genos document delete <name>`
+  - Delete a document collection.
+  - Example:
+
+    ```bash
+    genos document delete research-docs
+    ```
+
+## Function commands
+- `genos function create <name>`
+  - Create a new function.
+  - Example:
+
+    ```bash
+    genos function create checkExit
+    ```
+
+- `genos function add <function> <project>`
+  - Add a function to a project.
+  - Example:
+
+    ```bash
+    genos function add checkExit help-bot
     ```
 
 ## List commands
@@ -631,6 +797,14 @@ This section documents every available `genos` command and subcommand.
 
     ```bash
     genos list projects
+    ```
+
+- `genos list embeddings`
+  - List all embeddings.
+  - Example:
+
+    ```bash
+    genos list embeddings
     ```
 
 - `genos list knowledge`
@@ -666,7 +840,7 @@ GenOS is in **v0.3.x** — early but functional.
 
 - [x] Graph-based runtime
 - [x] Tool system
-- [x] Embeddings/RAG
+- [x] Knowledge Embeddings/RAG
 - [x] Function execution
 - [ ] Module nodes
 - [ ] Subgraph/project composition

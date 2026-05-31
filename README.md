@@ -133,22 +133,22 @@ It supports:
 Generate vector embeddings from your documents:
 
 ```bash
-genos embedding build help-docs
+genos knowledge build help-docs
 ```
 
 The setup command will:
 
-- let you choose an enbedding model from the available models.
-- creates the vector embeddings for `help-docs`
+- let you choose an embedding model from the available models.
+- creates the vector embeddings on the knowledge using the selected embedding model.
 
-## 8. Attach embedding to the project
+## 8. Attach knowledge to the project
 
-Attach an existing embedding collection to the project so RAG nodes can use it at runtime. This command registers the embedding name with the project's configuration — it does not (re)build vector data, so make sure you've already run `genos embedding build help-docs` if needed.
+Attach an existing knowledge collection to the project so RAG nodes can use it at runtime. This command registers the knowledge name with the project's configuration — it does not (re)build vector data, so make sure you've already run `genos knowledge build help-docs` if needed.
 
-Use the `-e, --embedding <name>` flag to specify the collection:
+Use the `-k, --knowledge <name>` flag to specify the collection:
 
 ```bash
-genos project add help-bot -e help-docs
+genos project add help-bot -k help-docs
 ```
 
 ## 9. Configure the Workflow Graph
@@ -159,12 +159,12 @@ Open the project config:
 genos project open help-bot   
 ```
 
-Verify the embedding is listed and that your RAG node references `embedding: help-docs`.
+Verify the knowledge is listed and that your RAG node references `knowledge: help-docs`.
 
 Update the graph to connect:
 
 - user input
-- embedding retrieval (RAG)
+- knowledge retrieval (RAG)
 - language model response
 - CLI output
 
@@ -183,7 +183,7 @@ graph:
     search:
       type: rag
       model: mxbai-embed-large
-      embedding: help-docs
+      knowledge: help-docs
       input: user_input
       output: context
 
@@ -230,7 +230,7 @@ genos project validate help-bot
 Start the chatbot:
 
 ```bash
-genos run help-bot
+genos project run help-bot
 ```
 
 Example:
@@ -421,7 +421,7 @@ This workspace can be explored, modified, and executed directly using GenOS comm
 cd example-workspace
 genos setup -d
 genos doctor
-genos run help-bot
+genos project run help-bot
 ```
 
 ## Notes
@@ -554,122 +554,74 @@ This section documents every available `genos` command and subcommand.
     genos project open help-bot
     ```
 
-## Embedding commands
-- `genos embedding create <name>`
-  - Create a new embedding collection.
+## Knowledge commands
+- `genos knowledge create <name>`
+  - Create a new knowledge collection.
   - Options: `-o, --open` to open the created file in the editor.
   - Example:
 
     ```bash
-    genos embedding create help-docs
+    genos knowledge create help-docs
     ```
   - Example with open flag:
 
     ```bash
-    genos embedding create help-docs --open
+    genos knowledge create help-docs --open
     ```
 
-- `genos embedding add <name> <fileName>`
-  - Add a file to an embedding collection.
+- `genos knowledge add <name> <fileName>`
+  - Add a file to an knowledge collection.
   - Example:
 
     ```bash
-    genos embedding add help-docs docs/help.txt
+    genos knowledge add help-docs docs/help.txt
     ```
 
-- `genos embedding remove <name> <fileName>`
-  - Remove a file from an embedding collection.
+- `genos knowledge remove <name> <fileName>`
+  - Remove a file from an knowledge collection.
   - Example:
 
     ```bash
-    genos embedding remove help-docs docs/help.txt
+    genos knowledge remove help-docs docs/help.txt
     ```
 
-- `genos embedding list <name>`
-  - List files in an embedding collection.
+- `genos knowledge list <name>`
+  - List files in an knowledge collection.
   - Example:
 
     ```bash
-    genos embedding list help-docs
+    genos knowledge list help-docs
     ```
 
-- `genos embedding inspect <name> <fileName>`
-  - Inspect a file inside an embedding collection.
+- `genos knowledge inspect <name> <fileName>`
+  - Inspect a file inside an knowledge collection.
   - Example:
 
     ```bash
-    genos embedding inspect help-docs docs/help.txt
+    genos knowledge inspect help-docs docs/help.txt
     ```
 
-- `genos embedding build <name> [model]`
-  - Build the embedding collection using a model.
+- `genos knowledge build <name> [model]`
+  - Build the knowledge collection using a model.
   - The model parameter is optional; if omitted, you will be prompted to select from configured embedding models.
   - Example:
 
     ```bash
-    genos embedding build help-docs mxbai-embed-large
+    genos knowledge build help-docs mxbai-embed-large
     ```
   - Example without model (interactive selection):
 
     ```bash
-    genos embedding build help-docs
+    genos knowledge build help-docs
     ```
 
-- `genos embedding delete <name>`
-  - Delete an embedding collection.
+- `genos knowledge delete <name>`
+  - Delete an knowledge collection.
   - Example:
 
     ```bash
-    genos embedding delete help-docs
-    ```
+    genos knowledge deete help-docs
 
-## Document commands
-- `genos document create <name>`
-  - Create a new document collection.
-  - Example:
-
-    ```bash
-    genos document create research-docs
-    ```
-
-- `genos document add <name> <fileName>`
-  - Add a file to a document collection.
-  - Example:
-
-    ```bash
-    genos document add research-docs documents/paper.txt
-    ```
-
-- `genos document remove <name> <fileName>`
-  - Remove a file from a document collection.
-  - Example:
-
-    ```bash
-    genos document remove research-docs documents/paper.txt
-    ```
-
-- `genos document list <name>`
-  - List files in a document collection.
-  - Example:
-
-    ```bash
-    genos document list research-docs
-    ```
-
-- `genos document inspect <name> <fileName>`
-  - Inspect a file inside a document collection.
-  - Example:
-
-    ```bash
-    genos document inspect research-docs documents/paper.txt
-    ```
-
-- `genos document delete <name>`
-  - Delete a document collection.
-  - Example:
-
-    ```bash
-    genos document delete research-docs
     ```
 
 ## List commands
@@ -681,12 +633,12 @@ This section documents every available `genos` command and subcommand.
     genos list projects
     ```
 
-- `genos list embeddings`
-  - List all embeddings.
+- `genos list knowledge`
+  - List all knowledge.
   - Example:
 
     ```bash
-    genos list embeddings
+    genos list knowledge
     ```
 
 - `genos list models`
@@ -707,7 +659,7 @@ This section documents every available `genos` command and subcommand.
 
 # Status
 
-GenOS is in **v0.1.x** — early but functional.
+GenOS is in **v0.3.x** — early but functional.
 
 
 # Roadmap
@@ -716,7 +668,7 @@ GenOS is in **v0.1.x** — early but functional.
 - [x] Tool system
 - [x] Embeddings/RAG
 - [x] Function execution
-- [ ] Agent nodes
+- [ ] Module nodes
 - [ ] Subgraph/project composition
 - [ ] Visual graph debugger
 - [ ] Interactive UI

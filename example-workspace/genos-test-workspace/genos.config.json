@@ -20,7 +20,7 @@
             "endpoint": "http://localhost:11434/api/generate"
         }
     },
-    "embeddings": {
+    "embeddingModels": {
         "help-search": {
             "type": "local",
             "provider": "ollama",

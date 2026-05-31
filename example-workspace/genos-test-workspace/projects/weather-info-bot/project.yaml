@@ -8,7 +8,7 @@ resources:
     - my-tinyllama
     - help-search
     - my-mxbai-embed-large
-  embeddings: []
+  knowledge: []
   tools:
     - weather-data
     - geocode-city

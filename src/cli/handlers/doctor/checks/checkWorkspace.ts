@@ -17,7 +17,7 @@ export async function checkWorkspace(workspace: string): Promise<DoctorCheckResu
   }
 
   const projects = path.join(workspace, "projects");
-  const embeddings = path.join(workspace, "embeddings");
+  const knowledge = path.join(workspace, "knowledge");
   const genosDir = path.join(workspace, ".genos");
   const vectors = path.join(genosDir, "vectors");
 
@@ -28,11 +28,11 @@ export async function checkWorkspace(workspace: string): Promise<DoctorCheckResu
     messages.push("✓ projects folder exists");
   }
 
-  if (!fs.existsSync(embeddings)) {
+  if (!fs.existsSync(knowledge)) {
     ok = false;
-    messages.push("✗ embeddings folder missing");
+    messages.push("✗ knowledge folder missing");
   } else {
-    messages.push("✓ embeddings folder exists");
+    messages.push("✓ knowledge folder exists");
   }
 
   if (!fs.existsSync(genosDir)) {

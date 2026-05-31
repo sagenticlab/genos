@@ -75,9 +75,9 @@ export async function ${functionName}(...args) {
     const embeddingName = options.embedding;
     console.log("Embedding name:", embeddingName);
     try {
-      const embeddingDir = path.join(workspace, "embeddings", embeddingName);
+      const embeddingDir = path.join(workspace, "knowledge", embeddingName);
       const files = await fs.readdir(embeddingDir);
-      console.log("Files in embedding directory:", files);
+      console.log("Files in knowledge directory:", files);
       
       // Load and update the project yaml file
       const projectConfigPath = path.join(projectDir, "project.yaml");

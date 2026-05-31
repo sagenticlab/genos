@@ -20,7 +20,7 @@ export async function inspectEmbedding(name: string, fileName: string) {
     process.exit(1);
   }
   // Inspect the file
-  const filePath = path.join(workspace, "embeddings", name, fileName);
+  const filePath = path.join(workspace, "knowledge", name, fileName);
   try {
     const content = await fs.readFile(filePath, 'utf-8');
     console.log(`Content of '${fileName}' in embedding '${name}':`);

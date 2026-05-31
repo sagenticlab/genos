@@ -10,7 +10,7 @@ export async function createEmbedding(name: string, options: { open?: boolean })
     process.exit(1);
   }
 
-  const dir = path.join(workspace, "embeddings", name);
+  const dir = path.join(workspace, "knowledge", name);
 
   await fs.mkdir(dir, { recursive: true });
 

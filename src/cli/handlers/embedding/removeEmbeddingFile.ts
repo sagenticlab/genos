@@ -11,7 +11,7 @@ export async function removeEmbeddingFile(name: string, fileName: string) {
   }
 
   // Remove the file
-  const filePath = path.join(workspace, "embeddings", name, fileName);
+  const filePath = path.join(workspace, "knowledge", name, fileName);
   try {
     await fs.unlink(filePath);
   } catch (error) {

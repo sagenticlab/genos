@@ -6,7 +6,7 @@ export async function checkEmbeddings(workspace: string): Promise<DoctorCheckRes
   const messages: string[] = [];
   let ok = true;
 
-  const embeddingsDir = path.join(workspace, "embeddings");
+  const embeddingsDir = path.join(workspace, "knowledge");
   const vectorsDir = path.join(workspace, ".genos", "vectors");
 
   if (!fs.existsSync(embeddingsDir)) {

@@ -11,7 +11,7 @@ export async function deleteEmbedding(name: string) {
   }
 
   // Delete the embedding directory
-  const embeddingDir = path.join(workspace, "embeddings", name);
+  const embeddingDir = path.join(workspace, "knowledge", name);
   try {
     await fs.rm(embeddingDir, { recursive: true, force: true });
   } catch (error) {

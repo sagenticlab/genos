@@ -11,7 +11,7 @@ export async function listEmbeddingFiles(name: string) {
   }
 
   // list the files
-  const dir = path.join(workspace, "embeddings", name);
+  const dir = path.join(workspace, "knowledge", name);
   try {
     const files = await fs.readdir(dir);
     const txtFiles = files.filter(f => f.endsWith('.txt'));

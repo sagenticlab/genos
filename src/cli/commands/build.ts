@@ -19,7 +19,7 @@ export const buildWorkspace = () => {
   }
 
   const projectsDir = path.join(workspace, "projects");
-  const embeddingsDir = path.join(workspace, "embeddings");
+  const knowledgeDir = path.join(workspace, "knowledge");
   const buildFile = path.join(workspace, ".genos", "build.json");
 
 
@@ -45,19 +45,19 @@ export const buildWorkspace = () => {
 
   projects.forEach(p => console.log(`✓ ${p}`));
 
-  const embeddings = fs.existsSync(embeddingsDir)
-    ? fs.readdirSync(embeddingsDir)
+  const knowledge = fs.existsSync(knowledgeDir)
+    ? fs.readdirSync(knowledgeDir)
     : [];
 
-  console.log("\nChecking embeddings...\n");
+  console.log("\nChecking knowledge...\n");
 
-  embeddings.forEach(e => console.log(`✓ ${e}`));
+  knowledge.forEach(e => console.log(`✓ ${e}`));
 
   const buildInfo = {
     models: models.map((m: any) => m.name),
     tools: tools.map((t: any) => t.name),
     projects,
-    embeddings
+    knowledge
   };
 
   fs.writeFileSync(buildFile, JSON.stringify(buildInfo, null, 2));

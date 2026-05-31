@@ -34,7 +34,7 @@ export async function buildEmbedding(name: string, model: string) {
     process.exit(1);
   }
 
-  const dir = path.join(workspace, "embeddings", name);
+  const dir = path.join(workspace, "knowledge", name);
   const files = await fs.readdir(dir);
 
   const texts: string[] = [];

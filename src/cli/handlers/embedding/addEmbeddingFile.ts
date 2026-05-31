@@ -10,7 +10,7 @@ export async function addEmbeddingFile(name: string, fileName: string) {
     process.exit(1);
   }
 
-  const file = path.join(workspace, "embeddings", name, fileName);
+  const file = path.join(workspace, "knowledge", name, fileName);
 
   await fs.writeFile(file, "");
 

@@ -1,6 +1,6 @@
 {
   "name": "@sagentic/genos",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "CLI-based AI orchestration runtime",
   "main": "index.js",
   "scripts": {

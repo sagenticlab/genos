@@ -475,6 +475,8 @@ If you need to troubleshoot your GenOS workspace, use the built-in health check 
 
 - `genos doctor`
   - Run workspace health checks and identify issues.
+- `genos project run help-bot -t`
+  - Runs the project in trace mode.
 - `genos setup -d` (or `genos setup`)
   - Validate your runtime and restore missing dependencies. Use `-d, --default` to run setup non-interactively with the recommended models (`phi3`, `mxbai-embed-large`).
 
@@ -502,14 +504,6 @@ This section documents every available `genos` command and subcommand.
 
     ```bash
     genos setup -d
-    ```
-
-- `genos build`
-  - Build and validate the workspace environment.
-  - Example:
-
-    ```bash
-    genos build
     ```
 
 - `genos doctor`
@@ -576,13 +570,13 @@ This section documents every available `genos` command and subcommand.
   - Add resources to a project.
   - Options:
     - `-f, --function <name>` to add a function
-    - `-e, --embedding <name>` to add an embedding
+    - `-k, --knowledge <name>` to add an knowledge
     - `-t, --tool <name>` to add a tool
   - Examples:
 
     ```bash
     genos project add help-bot -f checkExit
-    genos project add help-bot -e help-docs
+    genos project add help-bot -k help-docs
     genos project add help-bot -t search-tool
     ```
 
@@ -724,55 +718,6 @@ The `genos embedding ...` commands are deprecated. Use the equivalent `genos kno
     genos embedding delete help-docs
     ```
 
-## Document commands
-- `genos document create <name>`
-  - Create a new document collection.
-  - Example:
-
-    ```bash
-    genos document create research-docs
-    ```
-
-- `genos document add <name> <fileName>`
-  - Add a file to a document collection.
-  - Example:
-
-    ```bash
-    genos document add research-docs docs/research.txt
-    ```
-
-- `genos document remove <name> <fileName>`
-  - Remove a file from a document collection.
-  - Example:
-
-    ```bash
-    genos document remove research-docs docs/research.txt
-    ```
-
-- `genos document list <name>`
-  - List files in a document collection.
-  - Example:
-
-    ```bash
-    genos document list research-docs
-    ```
-
-- `genos document inspect <name> <fileName>`
-  - Inspect a file inside a document collection.
-  - Example:
-
-    ```bash
-    genos document inspect research-docs docs/research.txt
-    ```
-
-- `genos document delete <name>`
-  - Delete a document collection.
-  - Example:
-
-    ```bash
-    genos document delete research-docs
-    ```
-
 ## Function commands
 - `genos function create <name>`
   - Create a new function.
@@ -799,8 +744,8 @@ The `genos embedding ...` commands are deprecated. Use the equivalent `genos kno
     genos list projects
     ```
 
-- `genos list embeddings`
-  - List all embeddings.
+- `genos list embeddings` [DEPRECATED] use `genos list knowledge`
+  - List all knowledge.
   - Example:
 
     ```bash

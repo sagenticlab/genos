@@ -11,5 +11,8 @@ export const outputNodeHandler = async (node: GraphNode, state: ExecutionState):
     console.log(`\n\n===================\n\nOutput: ${state.data[outputNode.input]}\n\n===================\n\n`);
 
     state.data['output'] = true;
+    if(outputNode.output) {
+      state.data[outputNode.output] = state.data[outputNode.input];
+    }
     return state;``
 };

@@ -1,3 +1,5 @@
+import { loadProjectConfig } from "../utils/loadProjectConfig";
+
 export function validateGraph(graph: any): void {
   const { nodes, edges } = graph;
 
@@ -74,6 +76,30 @@ export function validateGraph(graph: any): void {
         }
         keys.add(condKey);
       }
+    }
+  }
+
+  // ---- MODULE NODE VALIDATION ----
+  for (const [nodeId, node] of Object.entries(nodes)) {
+    if ((node as any).type === "module") {
+      const moduleNode = node as any;
+      const subProjectId = moduleNode.module;
+
+      if (!subProjectId) {
+        throw new Error(`Module node '${nodeId}' missing required 'module' field`);
+      }
+
+      const subProject = loadProjectConfig(subProjectId, false);
+      if (!subProject) {
+        throw new Error(`Module node '${nodeId}' references non-existent project '${subProjectId}'`);
+      }
+
+      if (!subProject.graph) {
+        throw new Error(`Module project '${subProjectId}' has no graph defined`);
+      }
+
+      // Recursively validate subgraph
+      validateGraph(subProject.graph);
     }
   }
 

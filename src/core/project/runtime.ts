@@ -9,14 +9,15 @@ import { llmNodeHandler } from "./nodeHandlers/llm";
 import { outputNodeHandler } from "./nodeHandlers/output";
 import { ragNodeHandler } from "./nodeHandlers/rag";
 import { toolNodeHandler } from "./nodeHandlers/tool";
+import { moduleNodeHandler } from "./nodeHandlers/module";
 import { BUILTIN_TOOLS } from "../tools/toolRegistry";
 
 export const runGraph = async (
   graph: Graph,
   entryNode: string,
   initialState: ExecutionState,
-  resources: Resources
-) => {
+  resources: Resources,
+): Promise<ExecutionState> => {
 
   // Injecting Builtin tools.
   initialState.config.tools = { ...BUILTIN_TOOLS, ...initialState.config.tools };
@@ -65,6 +66,9 @@ export const runGraph = async (
         break;
       case "tool":
         await toolNodeHandler(node, state, tools);
+        break;
+      case "module":
+        await moduleNodeHandler(node, state);
         break;
       case "control":
         nextNode = await controlNodeHandler(node, state);

@@ -52,7 +52,16 @@ export interface OutputNode {
   type: "output";
   mode: "cli" | "api";
   input: string;
+  output?: string; // state key or literal value
 }
+
+export interface ModuleNode {
+  type: "module";
+  module: string; // reference to another Project
+  inputs: { [key: string]: string }; // mapping of module input keys to state keys
+  outputs: { [key: string]: string }; // mapping of module output keys to state keys
+}
+
 
 export interface AgentNode {
   type: "agent";
@@ -61,5 +70,5 @@ export interface AgentNode {
 
 
 
-export type GraphNode = LLMNode | RAGNode | ToolNode | FunctionNode | ControlNode | InputNode | OutputNode | AgentNode;
+export type GraphNode = LLMNode | RAGNode | ToolNode | FunctionNode | ControlNode | InputNode | OutputNode | ModuleNode | AgentNode;
 

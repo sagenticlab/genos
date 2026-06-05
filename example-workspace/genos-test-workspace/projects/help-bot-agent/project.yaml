@@ -1,15 +1,9 @@
-id: help-bot
-name: help-bot
-description: Help Bot
+id: help-bot-agent
+name: help-bot-agent
+description: Help Bot Agent
 resources:
-  models:
-    - my-mistral
-    - my-phi3
-    - my-tinyllama
-    - help-search
-    - my-mxbai-embed-large
-  knowledge:
-    - help-docs
+  models: []
+  knowledge: []
 entryNode: start
 graph:
   nodes:
@@ -24,28 +18,22 @@ graph:
       input:
         - user_input
       output: should_exit
-    search:
-      type: rag
-      model: help-search
-      knowledge: help-docs
-      input: user_input
-      output: context
-    answer:
-      type: llm
-      model: my-tinyllama
-      context: context
-      input:
-        - user_input
-      output: summary
+    run_module:
+      type: module
+      module: help-bot-module
+      inputs:
+        user_input1: user_input
+      outputs:
+        module_output: response
     output:
       type: output
       mode: cli
-      input: summary
+      input: response
   edges:
     - from: start
       to: check_exit
     - from: check_exit
-      to: search
+      to: run_module
       condition:
         input: should_exit
         key: continue
@@ -54,9 +42,7 @@ graph:
       condition:
         input: should_exit
         key: exit
-    - from: search
-      to: answer
-    - from: answer
+    - from: run_module
       to: output
     - from: output
-      to: start
+      to: __end__

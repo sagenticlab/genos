@@ -1,0 +1,34 @@
+id: help-bot-module
+name: help-bot-module
+description: Help Bot Module
+inputs:
+  - user_input1
+outputs:
+  - module_output
+resources:
+  models:
+    - my-tinyllama
+    - help-search
+  knowledge:
+    - help-docs
+entryNode: start
+graph:
+  nodes:
+    start:
+      type: rag
+      model: help-search
+      knowledge: help-docs
+      input: user_input1
+      output: context
+    answer:
+      type: llm
+      model: my-tinyllama
+      context: context
+      input:
+        - user_input
+      output: module_output
+  edges:
+    - from: start
+      to: answer
+    - from: answer
+      to: __end__

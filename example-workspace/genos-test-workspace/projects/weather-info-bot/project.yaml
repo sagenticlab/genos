@@ -42,9 +42,8 @@ graph:
       type: tool
       tool: geocode-city
       input:
-        - city
-      args:
-        - city
+        query:
+          name: "{{city}}"
       output: location
     format_geo_result:
       type: function
@@ -57,9 +56,9 @@ graph:
       type: tool
       tool: weather-data
       input:
-        - user_input
-      args:
-        - location
+        query:
+          latitude: "{{location.latitude}}"
+          longitude: "{{location.longitude}}"
       output: weather_info
     summarize:
       type: llm

@@ -54,9 +54,7 @@ graph:
       type: tool
       tool: file-reader
       input:
-        - file_path
-      args:
-        - file_path
+        filePath: "{{file_path}}"
       output: file_content
     summarize:
       type: llm

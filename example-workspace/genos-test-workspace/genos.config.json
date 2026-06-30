@@ -35,20 +35,11 @@
         }
     },
     "tools": {
-        "file-reader": {
-            "type": "builtin",
-            "function": "fileReader",
-            "params": {
-                "fileName": "{{file_path}}"
-            }
-        },
         "weather-data":{
             "type": "http",
             "url": "https://api.open-meteo.com/v1/forecast",
             "method": "GET",
-            "params": {
-                "latitude": "{{location.latitude}}",
-                "longitude": "{{location.longitude}}",
+            "query": {
                 "current_weather": true
             }
         },
@@ -56,8 +47,7 @@
             "type": "http",
             "url": "https://geocoding-api.open-meteo.com/v1/search",
             "method": "GET",
-            "params": {
-                "name": "{{city}}",
+            "query": {
                 "count": 1
             }
         }

@@ -10,7 +10,10 @@ import { outputNodeHandler } from "./nodeHandlers/output";
 import { ragNodeHandler } from "./nodeHandlers/rag";
 import { toolNodeHandler } from "./nodeHandlers/tool";
 import { moduleNodeHandler } from "./nodeHandlers/module";
-import { BUILTIN_TOOLS } from "../tools/toolRegistry";
+import { CapabilityRegistry } from "../capability/capabilityRegistry";
+import { HttpCapability } from "../capability/httpCapability";
+import { FileSystemCapability } from "../capability/fileSystemCapability";
+import { BUILTIN_TOOLS } from "../tools/builtinTools";
 
 export const runGraph = async (
   graph: Graph,
@@ -27,6 +30,10 @@ export const runGraph = async (
     currentNode: entryNode,
     completed: false
   };
+  
+  const capabilityRegistry = new CapabilityRegistry();
+  capabilityRegistry.register(new HttpCapability());
+  capabilityRegistry.register(new FileSystemCapability());
 
   const models = resources?.models || [];
   const knowledge = resources?.knowledge || [];
@@ -65,7 +72,7 @@ export const runGraph = async (
         await functionNodeHandler(node, state, functions);
         break;
       case "tool":
-        await toolNodeHandler(node, state, tools);
+        await toolNodeHandler(node, state, tools, capabilityRegistry);
         break;
       case "module":
         await moduleNodeHandler(node, state);

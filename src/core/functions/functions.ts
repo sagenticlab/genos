@@ -1,4 +1,6 @@
-export const FUNCTIONS = [
+import { FunctionDefinition } from "./functionRegistry";
+
+export const FUNCTIONS: FunctionDefinition[] = [
   {
     name: 'checkExit',
     description: 'Checks if the input query is an exit command.',

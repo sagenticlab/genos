@@ -19,7 +19,6 @@ export interface ToolNode {
   type: "tool";
   tool: string; // reference to SystemConfig.tools
   input?: string; // state key
-  args?: string[]; // state key or literal object/array
   output: string; // state key
 }
 

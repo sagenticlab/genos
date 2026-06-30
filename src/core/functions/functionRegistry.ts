@@ -1,5 +1,11 @@
 import { FUNCTIONS } from "./functions";
 
+export interface FunctionDefinition {
+  name: string;
+  description: string;
+  body: Function;
+}
+
 export class FunctionRegistry {
     private functions = new Map<string, Function>();
     constructor() {

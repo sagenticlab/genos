@@ -3,10 +3,49 @@ import { Capability } from "./capability";
 export class HttpCapability implements Capability {
     name: string;
     description: string;
+    schema = {
+        properties: [
+            {
+                name: "url",
+                type: "string",
+                required: true,
+                description: "Endpoint URL"
+            },
+            {
+                name: "method",
+                type: "enum",
+                values: ["GET", "POST", "PUT", "DELETE"],
+                default: "GET",
+                description: "HTTP method"
+            },
+            {
+                name: "query",
+                type: "map",
+                required: false,
+                description: "Query parameters"
+            },
+            {
+                name: "headers",
+                type: "map",
+                required: false,
+                description: "Request headers"
+            },
+            {
+                name: "body",
+                type: "object",
+                required: false,
+                description: "Request body for POST/PUT requests"
+            }
+        ]
+    };
 
     constructor() {
         this.name = 'http';
         this.description = 'Capability to make HTTP requests';
+    }
+
+    getSchema() {
+        return this.schema;
     }
 
     async execute(config: Record<string, any>, trace: boolean): Promise<Record<string, any>> {

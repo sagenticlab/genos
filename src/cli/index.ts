@@ -11,6 +11,7 @@ import { setupCommand } from "./commands/setup";
 import { workspaceCommand } from "./commands/workspace";
 import { functionCommand } from "./commands/functions";
 import { knowledgeCommand } from "./commands/knowledge";
+import { toolCommand } from "./commands/tool";
 
 
 const program = new Command();
@@ -18,7 +19,7 @@ const program = new Command();
 program
   .name("genos")
   .description("GenOS - AI runtime environment")
-  .version("0.1.0");
+  .version("0.3.2");
 
 // Register commands
 program.addCommand(initCommand);
@@ -30,6 +31,7 @@ program.addCommand(embeddingCommand);
 program.addCommand(documentCommand);
 program.addCommand(projectCommand);
 program.addCommand(functionCommand);
+program.addCommand(toolCommand);
 program.addCommand(listCommand);
 program.addCommand(doctorCommand);
 

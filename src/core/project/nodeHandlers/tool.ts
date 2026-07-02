@@ -1,6 +1,7 @@
 import { ExecutionState } from "../../../models/ExecutionState";
 import { GraphNode, ToolNode } from "../../../models/Nodes";
 import { CapabilityRegistry } from "../../capability/capabilityRegistry";
+import { ToolDefinition } from "../../tools/toolRegistry";
 
 export const toolNodeHandler = async (node: GraphNode, state: ExecutionState, tools: string[], capabilityRegistry: CapabilityRegistry): Promise<ExecutionState> => {
     const toolNode = node as ToolNode;
@@ -19,7 +20,7 @@ export const toolNodeHandler = async (node: GraphNode, state: ExecutionState, to
       throw new Error(`Tool not found: ${toolNode.tool}`);
     }
 
-    const toolResource = (state.config.tools as Record<string, any>)[tool];
+    const toolResource = (state.config.tools as Record<string, ToolDefinition>)[tool];
 
     if (!toolResource) {
       throw new Error(`Tool resource not found in config: ${toolNode.tool}`);
@@ -31,7 +32,7 @@ export const toolNodeHandler = async (node: GraphNode, state: ExecutionState, to
     }
     
     const resolvedInputs = resolveValue(toolNode.input, state);
-    const mergedInputs = toolNode.input ? mergeValues(toolResource, resolvedInputs) : toolResource;
+    const mergedInputs = toolNode.input ? mergeValues(toolResource.parameters, resolvedInputs) : toolResource.parameters;
     
     if(state.trace) {
       console.log(`Executing tool: ${toolNode.tool} with capability: ${capability.name} and parameters:`, mergedInputs);

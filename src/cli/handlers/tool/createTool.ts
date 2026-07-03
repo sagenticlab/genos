@@ -114,6 +114,12 @@ export async function createTool(name: string) {
         parameters
     };
 
+    const validationResult = capabilityRegistry.get(type)?.validateParameters?.(parameters);
+    if (validationResult && !validationResult.status) {
+        console.error(`Invalid tool parameters: ${validationResult.message}`);
+        return;
+    }
+
     // ---- Confirm ----
     const ok = await confirm({
         // Print selected settings for confirmation
@@ -134,6 +140,8 @@ export async function createTool(name: string) {
         type,
         parameters
     };
+
+
 
     await fs.writeFile(
         `${workspaceRoot}/genos.config.json`,

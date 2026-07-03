@@ -48,19 +48,37 @@ export class HttpCapability implements Capability {
         return this.schema;
     }
 
-    async execute(config: Record<string, any>, trace: boolean): Promise<Record<string, any>> {
+    validateParameters(parameters: Record<string, any>): { status: boolean; message?: string } {
+        if (!parameters.url || typeof parameters.url !== "string") {
+            return { status: false, message: "Invalid or missing 'url' parameter" };
+        }
+        if (parameters.url && typeof parameters.url === "string") {
+            const urlPattern = /^(http|https):\/\/[^ "]+$/;
+            if (!urlPattern.test(parameters.url)) {
+                return { status: false, message: "Invalid 'url' parameter" };
+            }
+        } else {
+            return { status: false, message: "Invalid or missing 'url' parameter" };
+        }
+        if (parameters.method && !["GET", "POST", "PUT", "DELETE"].includes(parameters.method)) {
+            return { status: false, message: "Invalid 'method' parameter" };
+        }
+        return { status: true };
+    }
+
+    async execute(parameters: Record<string, any>, trace: boolean): Promise<Record<string, any>> {
         // Implementation for HTTP capability
-        const query = config.query || {};
+        const query = parameters.query || {};
 
-        let url = config.url;
+        let url = parameters.url;
 
-        if (config.method === "GET" && Object.keys(query).length) {
+        if (parameters.method === "GET" && Object.keys(query).length) {
             const queryString = this.buildQueryString(query);
             url = `${url}?${queryString}`;
         }
 
         const response = await fetch(url, {
-            method: config.method || "GET"
+            method: parameters.method || "GET"
         });
 
         if (!response.ok) {

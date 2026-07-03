@@ -22,6 +22,33 @@ export const runGraph = async (
   resources: Resources,
 ): Promise<ExecutionState> => {
 
+  const capabilityRegistry = new CapabilityRegistry();
+  capabilityRegistry.register(new HttpCapability());
+  capabilityRegistry.register(new FileSystemCapability());
+
+  if(initialState.trace) {
+  console.log(initialState.config.tools);
+  }
+
+  const validationResults = Object.entries(initialState.config.tools || {}).map(([toolName, toolDef]) => {
+    const capability = capabilityRegistry.get(toolDef.type);
+    if (!capability) {
+      return { toolName, status: false, message: `Capability not found for tool type: ${toolDef.type}` };
+    }
+    const validationResult = capability.validateParameters?.(toolDef.parameters);
+    if (validationResult && validationResult.status === false) {
+      console.error(`Invalid parameters for tool: ${toolName}. ${validationResult.message}`);
+      return { toolName, status: false, message: `Invalid parameters for tool: ${toolName}. ${validationResult.message}` };
+    }
+    return { toolName, status: true, message: null };
+  });
+
+  const invalidTools = validationResults.filter(result => !result.status);
+  if (invalidTools.length > 0) {
+    const errorMessages = invalidTools.map(tool => `Tool '${tool.toolName}': ${tool.message}`).join("\n");
+    throw new Error(`Invalid tool configurations:\n${errorMessages}`);
+  }
+
   // Injecting Builtin tools.
   initialState.config.tools = { ...BUILTIN_TOOLS, ...initialState.config.tools };
 
@@ -30,10 +57,6 @@ export const runGraph = async (
     currentNode: entryNode,
     completed: false
   };
-  
-  const capabilityRegistry = new CapabilityRegistry();
-  capabilityRegistry.register(new HttpCapability());
-  capabilityRegistry.register(new FileSystemCapability());
 
   const models = resources?.models || [];
   const knowledge = resources?.knowledge || [];

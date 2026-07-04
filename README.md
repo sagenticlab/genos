@@ -15,7 +15,7 @@ Inspired by operating system concepts, GenOS treats AI workflows as executable s
 - RAG and knowledge management
 - Reusable project composition
 - Built-in and custom functions
-- Tool integration via MCP
+- Reusable tool integration
 - Workspace-based development
 - Provider agnostic (Ollama, OpenAI, Anthropic, custom)
 
@@ -302,6 +302,68 @@ The chatbot:
 - injects them into context
 - generates responses using a local language model
 
+# Working with Tools
+
+The getting started example used only **RAG** and **LLM** nodes. Projects can also interact with external systems through **Tools**.
+
+A Tool represents a reusable integration that can be shared across multiple projects.
+
+Create a new tool:
+
+```bash
+genos tool create weather-data
+```
+
+The CLI will guide you through configuring the tool and store the resulting definition in `genos.config.json`.
+
+Example:
+
+```json
+{
+  "tools": {
+    "weather-data": {
+      "description": "Retrieve current weather information",
+      "type": "http",
+      "url": "https://api.open-meteo.com/v1/forecast",
+      "method": "GET",
+      "query": {
+        "current_weather": true
+      }
+    }
+  }
+}
+```
+
+Once created, a tool can be invoked from any project using a Tool Node.
+
+```yaml
+weather:
+  type: tool
+  tool: weather-data
+
+  input:
+    query:
+      latitude: "{{location.latitude}}"
+      longitude: "{{location.longitude}}"
+
+  output: weather_info
+```
+
+`input` supplies the runtime values for the tool. During execution, GenOS merges these values with the tool's default configuration, resolves any `{{ }}` expressions from the current project state, and invokes the tool.
+
+### Built-in Tools
+
+GenOS also provides a set of built-in tools that are automatically available in every workspace.
+
+Current built-in tools include:
+
+| Tool          | Description                                             |
+|---------------|---------------------------------------------------------|
+| `file-reader` | Reads the contents of a file from the local filesystem. |
+
+Built-in tools are used exactly like user-defined tools.
+
+
 # Next Steps
 
 Explore more GenOS capabilities:
@@ -433,7 +495,7 @@ input → rag → llm → output
 
 ### 2. Weather Info Bot (Tool chaining)
 
-Tool orchestration using geocoding + weather APIs.
+Tool orchestration using reusable workspace tools.
 
 * Extract city → geocode → fetch weather
 
@@ -657,6 +719,113 @@ This section documents every available `genos` command and subcommand.
     genos knowledge delete help-docs
     ```
 
+## Tool commands
+- `genos tool create <name>`
+  - Create a new tool.
+  - Example:
+
+    ```bash
+    genos tool create search-tool
+    ```
+
+- `genos tool view <name>`
+  - View tool configuration.
+  - Example:
+
+    ```bash
+    genos tool view search-tool
+    ```
+
+- `genos tool validate <name>`
+  - Validate tool configuration.
+  - Example:
+
+    ```bash
+    genos tool validate search-tool
+    ```
+
+- `genos tool test <name> --params <json>`
+  - Test a tool with JSON parameters.
+  - Options: `-p, --params <json>` to provide JSON parameters for the tool.
+  - Note: In PowerShell, escape double quotes with backslashes inside single quotes.
+  - Example (bash):
+
+    ```bash
+    genos tool test weather-data2 --params '{"url":"https://api.open-meteo.com/v1/forecast","method":"GET","query":{"current_weather":true,"latitude":12.97,"longitude":77.59}}'
+    ```
+  
+  - Example (PowerShell):
+
+    ```powershell
+    genos tool test weather-data2 --params '{\"url\":\"https://api.open-meteo.com/v1/forecast\",\"method\":\"GET\",\"query\":{\"current_weather\":true,\"latitude\":12.97,\"longitude\":77.59}}'
+    ```
+
+- `genos tool delete <name>`
+  - Delete a tool.
+  - Example:
+
+    ```bash
+    genos tool delete search-tool
+    ```
+
+## Function commands
+- `genos function create <name>`
+  - Create a new function.
+  - Example:
+
+    ```bash
+    genos function create checkExit
+    ```
+
+- `genos function add <function> <project>`
+  - Add a function to a project.
+  - Example:
+
+    ```bash
+    genos function add checkExit help-bot
+    ```
+
+## List commands
+- `genos list projects`
+  - List all projects.
+  - Example:
+
+    ```bash
+    genos list projects
+    ```
+
+- `genos list embeddings` [DEPRECATED] use `genos list knowledge`
+  - List all knowledge.
+  - Example:
+
+    ```bash
+    genos list embeddings
+    ```
+
+- `genos list knowledge`
+  - List all knowledge.
+  - Example:
+
+    ```bash
+    genos list knowledge
+    ```
+
+- `genos list models`
+  - List all configured models.
+  - Example:
+
+    ```bash
+    genos list models
+    ```
+
+- `genos list tools`
+  - List all configured tools.
+  - Example:
+
+    ```bash
+    genos list tools
+    ```
+
 ## Deprecated embedding command aliases
 The `genos embedding ...` commands are deprecated. Use the equivalent `genos knowledge ...` commands instead.
 
@@ -718,62 +887,53 @@ The `genos embedding ...` commands are deprecated. Use the equivalent `genos kno
     genos embedding delete help-docs
     ```
 
-## Function commands
-- `genos function create <name>`
-  - Create a new function.
+## Deprecated Document commands
+- `genos document create <name>`
+  - Create a new document collection.
   - Example:
 
     ```bash
-    genos function create checkExit
+    genos document create research-docs
     ```
 
-- `genos function add <function> <project>`
-  - Add a function to a project.
+- `genos document add <name> <fileName>`
+  - Add a file to a document collection.
   - Example:
 
     ```bash
-    genos function add checkExit help-bot
+    genos document add research-docs docs/paper.txt
     ```
 
-## List commands
-- `genos list projects`
-  - List all projects.
+- `genos document remove <name> <fileName>`
+  - Remove a file from a document collection.
   - Example:
 
     ```bash
-    genos list projects
+    genos document remove research-docs docs/paper.txt
     ```
 
-- `genos list embeddings` [DEPRECATED] use `genos list knowledge`
-  - List all knowledge.
+- `genos document list <name>`
+  - List files in a document collection.
   - Example:
 
     ```bash
-    genos list embeddings
+    genos document list research-docs
     ```
 
-- `genos list knowledge`
-  - List all knowledge.
+- `genos document inspect <name> <fileName>`
+  - Inspect a file inside a document collection.
   - Example:
 
     ```bash
-    genos list knowledge
+    genos document inspect research-docs docs/paper.txt
     ```
 
-- `genos list models`
-  - List all configured models.
+- `genos document delete <name>`
+  - Delete a document collection.
   - Example:
 
     ```bash
-    genos list models
-    ```
-
-- `genos list tools`
-  - List all configured tools.
-  - Example:
-
-    ```bash
-    genos list tools
+    genos document delete research-docs
     ```
 
 # Status

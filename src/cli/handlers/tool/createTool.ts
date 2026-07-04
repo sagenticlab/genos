@@ -3,14 +3,13 @@ import { HttpCapability } from "../../../core/capability/httpCapability";
 import { findWorkspaceRoot } from "../../../core/utils/findWorkspaceRoot";
 import { loadSystemConfig } from "../../../core/utils/loadSystemConfig";
 import fs from "fs/promises";
+import { input, confirm, select } from "@inquirer/prompts";
 
 export async function createTool(name: string) {
 
     const capabilityRegistry = new CapabilityRegistry();
     capabilityRegistry.register(new HttpCapability());
     
-    const prompts = await import("@inquirer/prompts");
-    const { input, confirm, select } = prompts;
     const workspaceRoot = findWorkspaceRoot();
 
     if (!workspaceRoot) {
@@ -84,7 +83,7 @@ export async function createTool(name: string) {
                 }
                 break;
             case "map":
-                const mapValue = await askKeyValueMap(input, confirm, property);
+                const mapValue = await askKeyValueMap(property);
                 if (mapValue === undefined && property.required) {
                     console.error(`Property ${property.name} is required.`);
                     return;
@@ -94,7 +93,7 @@ export async function createTool(name: string) {
                 }
                 break;
             case "object":
-                const objectValue = await askJsonObject(input, confirm, property);
+                const objectValue = await askJsonObject(property);
                 if (objectValue === undefined && property.required) {
                     console.error(`Property ${property.name} is required.`);
                     return;
@@ -141,15 +140,13 @@ export async function createTool(name: string) {
         parameters
     };
 
-
-
     await fs.writeFile(
         `${workspaceRoot}/genos.config.json`,
         JSON.stringify(config, null, 2)
     );
 }
 
-async function askKeyValueMap(input: any, confirm: any, property: any): Promise<Record<string, any> | undefined> {
+async function askKeyValueMap(property: any): Promise<Record<string, any> | undefined> {
     
     const shouldAdd = !property.required ? await confirm({
         message: `Do you want to add entries for ${property.description} (${property.name})?`,
@@ -193,7 +190,7 @@ function parseValue(value: string): any {
 }
 
 
-async function askJsonObject(input: any, confirm: any, property: any): Promise<Record<string, any> | undefined> {
+async function askJsonObject(property: any): Promise<Record<string, any> | undefined> {
 
     const shouldAdd = !property.required ? await confirm({
         message: `Do you want to add entries for ${property.description} (${property.name})?`,

@@ -6,6 +6,7 @@ import { checkProjects } from "./checks/checkProjects";
 import { findWorkspaceRoot } from "../../../core/utils/findWorkspaceRoot";
 import { checkOllama } from "./checks/checkOllama";
 import { checkKnowledge } from "./checks/checkKnowledge";
+import { checkTools } from "./checks/checkTools";
 
 export interface DoctorCheckResult {
   name: string;
@@ -29,6 +30,7 @@ export async function doctor() {
     await checkWorkspace(workspace),
     await checkLanguageModels(workspace),
     await checkEmbeddingModels(workspace),
+    await checkTools(workspace),
     // await checkEmbeddings(workspace),
     await checkKnowledge(workspace),
     await checkProjects(workspace)

@@ -56,17 +56,6 @@
           "count": 1
         }
       }
-    },
-    "weather-data2": {
-      "description": "weather data 2",
-      "type": "http",
-      "parameters": {
-        "url": "https://kjsnvlknvlkdslv",
-        "method": "GET",
-        "query": {
-          "current_weather": true
-        }
-      }
     }
   }
 }
